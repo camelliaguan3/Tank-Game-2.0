@@ -52,8 +52,65 @@ def setup_screen_turt(sc, turts):
     turts[0].shape('circle')
     turts[0].turtlesize(0.2)
 
+def start_game(sc, turt):
+    '''
+    Starts the game by creating the welcome screen and dismissing it.
+
+    Returns None.
+    '''
+    print('Welcome Screen Loaded...')
+
+    setup_welcome(sc, turt)
+
+    dismiss_welcome()
+
+def setup_welcome(sc, turt):
+    '''
+    Sets up the welcome screen with background and words.
+
+    Returns None.
+    '''
+    change_background(sc, 'images/background1-resized.gif')
+
+    turt.penup()
+    turt.color('#CDCDFF')
+    turt.goto(0, -GAME_HEIGHT/10)
+    turt.write('tanks', move=False, align='center', font=('Vonique64', LARGE_FONT, 'normal'))
+    turt.goto(0, -GAME_HEIGHT/6)
+    turt.write('press s to start...', move=False, align='center', font=('Vonique64', MEDIUM_FONT, 'normal'))
+
+def dismiss_welcome():
+    '''
+    Dismisses the welcome screen by listening for the 's' key to be clicked. 
+    When 's' is clicked, the game is played.
+
+    Returns None.
+    '''
+    gameScreen.onkey(play_game, 's')
+    gameScreen.listen()
+
+def play_game():
+    '''
+    Plays the game.
+
+    Returns None.
+    '''
+    pass
+
+
+''' HELPER FUNCTIONS '''
+
+def change_background(sc, background):
+    '''
+    Changes the background picture of the given screen.
+
+    Returns None.
+    '''
+    sc.bgpic(background)
+
 
 if __name__ == '__main__':
     setup_screen_turt(gameScreen, turtles)
+    start_game(gameScreen, wordTurtle)
 
     gameScreen.mainloop()

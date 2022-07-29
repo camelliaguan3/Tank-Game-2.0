@@ -27,11 +27,11 @@ The *Milestones* section outlines each milestone and their due dates.
 
 *Due: July 29, 2022*
 
-> &cross; Create `main` function & `start_game()` function
+> &check; Create `main` function & `start_game()` function
 
-> &cross; Create welcome interface for the game
+> &check; Create welcome interface for the game
 
-> &cross; Create some functions to dismiss welcome interface and load in game
+> &check; Create some functions to dismiss welcome interface and load in game
 
 > &cross; Create mid-game interface
 
