@@ -33,7 +33,7 @@ The *Milestones* section outlines each milestone and their due dates.
 
 > &check; Create some functions to dismiss welcome interface and load in game
 
-> &cross; Create mid-game interface
+> &check; Create mid-game interface
 
 > &cross; Make progress on tank projectile movement
 

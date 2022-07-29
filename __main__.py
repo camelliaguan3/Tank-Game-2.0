@@ -9,6 +9,7 @@ End Date: N/A
 
 '''
 
+import time
 from consts import *
 import turtle
 
@@ -138,8 +139,38 @@ def play_game():
     global game_end
     global winner
 
-    
+    while not game_end:
 
+        nextPlayer = (currPlayer + 1) % 2
+
+        wordTurtle.goto(-GAME_WIDTH/3, -GAME_HEIGHT/2 + GRID_SIZE * 2.25)
+        wordTurtle.write(str(tanks_health[currPlayer]), move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
+        wordTurtle.goto(GAME_WIDTH/3, -GAME_HEIGHT/2 + GRID_SIZE * 2.25)
+        wordTurtle.write(str(tanks_health[nextPlayer]), move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
+        
+        
+
+        # CHECKS CURRENT PLAYER AND MOVES ARROW
+        if currPlayer == 0:
+            facing_right = True
+            wordTurtle.goto(-GAME_WIDTH/3, -GAME_HEIGHT/4 + GRID_SIZE * 1.5)
+        else: 
+            facing_right = False
+            wordTurtle.goto(GAME_WIDTH/3, -GAME_HEIGHT/4 + GRID_SIZE * 1.5)
+
+        wordTurtle.write('⇩', move=False, align='center', font=('Raleway Light', SMALL_FONT, 'normal'))
+
+        time.sleep(3)
+        projectile.clear()
+
+        move_projectile(projectile, facing_right)
+
+        if min(tanks_health) <= 0:
+            game_end = True
+            winner = currPlayer + 1
+
+        currPlayer = (currPlayer + 1) % 2
+        wordTurtle.clear()
 
 
 ''' HELPER FUNCTIONS '''
