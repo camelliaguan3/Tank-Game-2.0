@@ -35,7 +35,7 @@ The *Milestones* section outlines each milestone and their due dates.
 
 > &check; Create mid-game interface
 
-> &cross; Make progress on tank projectile movement
+> &check; Make progress on tank projectile movement
 
 **Milestone 2**
 

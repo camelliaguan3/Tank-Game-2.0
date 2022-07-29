@@ -9,6 +9,7 @@ End Date: N/A
 
 '''
 
+import math
 import time
 from consts import *
 import turtle
@@ -52,6 +53,7 @@ def setup_screen_turt(sc, turts):
     # PROJECTILE
     turts[0].shape('circle')
     turts[0].turtlesize(0.2)
+    turts[0].pendown()
 
 def start_game(sc, turt):
     '''
@@ -144,11 +146,9 @@ def play_game():
         nextPlayer = (currPlayer + 1) % 2
 
         wordTurtle.goto(-GAME_WIDTH/3, -GAME_HEIGHT/2 + GRID_SIZE * 2.25)
-        wordTurtle.write(str(tanks_health[currPlayer]), move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
+        wordTurtle.write(str(tanks_health[0]), move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
         wordTurtle.goto(GAME_WIDTH/3, -GAME_HEIGHT/2 + GRID_SIZE * 2.25)
-        wordTurtle.write(str(tanks_health[nextPlayer]), move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
-        
-        
+        wordTurtle.write(str(tanks_health[1]), move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
 
         # CHECKS CURRENT PLAYER AND MOVES ARROW
         if currPlayer == 0:
@@ -165,11 +165,26 @@ def play_game():
 
         move_projectile(projectile, facing_right)
 
+        hit, power, angle = shoot_projectile(projectile, tanks[currPlayer], tanks[nextPlayer], facing_right)
+
+        wordTurtle.goto(-GAME_WIDTH/2 + GRID_SIZE * 3.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
+        wordTurtle.write(power, move=False, align='left', font=('Raleway Light', SMALL_FONT, 'normal'))
+        wordTurtle.goto(-GAME_WIDTH/2 + GRID_SIZE * 3.5, GAME_HEIGHT/2 - GRID_SIZE * 2.5)
+        wordTurtle.write(angle, move=False, align='left', font=('Raleway Light', SMALL_FONT, 'normal'))
+
+        # TARGEt HIT, LOWER HEALTH
+        if hit:
+            pass
+        else:
+            pass
+
         if min(tanks_health) <= 0:
             game_end = True
             winner = currPlayer + 1
 
         currPlayer = (currPlayer + 1) % 2
+
+        time.sleep(3)
         wordTurtle.clear()
 
 
@@ -217,7 +232,73 @@ def move_projectile(turt, facing_right = True):
         turt.goto(GAME_WIDTH/3, -GAME_HEIGHT/4)
         turt.setheading(0)
     
+    turt.pendown()
+    
+def hit_tank():
+    '''
+    Determines if the target is hit by the projectile.
 
+    Returns True if the target has been hit, False otherwise. [boolean].
+    '''
+    pass
+
+def get_aim():
+    '''
+    Asks the user for aim.
+
+    Returns the power and angle [tuple].
+    '''
+
+    power = input('Enter Power (0 - 100): ')
+    angle = input('Enter Angle (in degrees): ')
+    print('')
+
+    while not angle.isnumeric() and not power.isnumeric():
+        print('Please enter integers!\n')
+        power = input('Enter Power (0 - 100): ')
+        angle = input('Enter Angle (in degrees): ')
+        print('')
+    
+    return (power, angle)
+
+def shoot_projectile(turt, tank, target, facing_right = True):
+    '''
+    Shoots a projectile in a parabolic shape based on power and angle.
+
+    Returns whether target is hit, power, and angle [tuple].
+    '''
+    power, angle = get_aim()
+    
+    prev_x = 0
+    prev_y = 0
+
+    angle = int(angle)
+    power = int(power)
+
+    for t in range(1, 30):
+
+        # PROJECTILE DIRECTION (BASED ON KINEMATICS)
+        if facing_right:
+            x = power * math.cos(math.radians(angle)) * t + tank.xcor()
+            y = power * math.sin(math.radians(angle)) * t - (((t ** 2) * 9.81) / 2) + tank.ycor()
+        
+        else:
+            x = (power * math.cos(math.radians(angle)) * t) * -1 + tank.xcor()
+            y = power * math.sin(math.radians(angle)) * t - (((t ** 2) * 9.81) / 2) + tank.ycor()
+        
+        turt.goto(x, y)
+        turt.stamp()
+
+        prev_x = x
+        prev_y = y
+
+        # STOP PROJECTILE WHEN TARGET IS REACHED
+        if y <= target.ycor() + GRID_SIZE/2:
+            break
+    
+    hit = hit_tank()
+
+    return (hit, power, angle)
 
 
 if __name__ == '__main__':
