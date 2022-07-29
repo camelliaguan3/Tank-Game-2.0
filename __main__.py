@@ -62,7 +62,7 @@ def start_game(sc, turt):
 
     setup_welcome(sc, turt)
 
-    dismiss_welcome()
+    dismiss_welcome(sc)
 
 def setup_welcome(sc, turt):
     '''
@@ -73,21 +73,20 @@ def setup_welcome(sc, turt):
     change_background(sc, 'images/background1-resized.gif')
 
     turt.penup()
-    turt.color('#CDCDFF')
     turt.goto(0, -GAME_HEIGHT/10)
     turt.write('tanks', move=False, align='center', font=('Vonique64', LARGE_FONT, 'normal'))
     turt.goto(0, -GAME_HEIGHT/6)
     turt.write('press s to start...', move=False, align='center', font=('Vonique64', MEDIUM_FONT, 'normal'))
 
-def dismiss_welcome():
+def dismiss_welcome(sc):
     '''
     Dismisses the welcome screen by listening for the 's' key to be clicked. 
     When 's' is clicked, the game is played.
 
     Returns None.
     '''
-    gameScreen.onkey(play_game, 's')
-    gameScreen.listen()
+    sc.onkey(play_game, 's')
+    sc.listen()
 
 def play_game():
     '''

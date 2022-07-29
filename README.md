@@ -65,6 +65,8 @@ The *Milestones* section outlines each milestone and their due dates.
 
 The *Design Choices* section explains any choices that I may have made in changing certain parts of the project or any parts of the project that required outside sources.
 
+**Milestone 1**: I decided to have the turtles and screen as global variables to avoid situations where the screen and turtles cannot be accessed by functions. This was used with the dismissal of the welcome screen, as the `onkey()` method only calls a function that does not have parameters. Therefore, the `play_game()` function is unable to be called with the screen and turtle arguments and is required to reference the global variables. I will attempt to find a way that allows `play_game()` to have parameters.
+
 <hr />
 
 ## Citations
