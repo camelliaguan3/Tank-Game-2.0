@@ -63,6 +63,10 @@ def start_game(sc, turt):
     setup_welcome(sc, turt)
 
     dismiss_welcome(sc)
+    
+    # REGISTERING SHAPES
+    turtle.register_shape('images/tank1.gif')
+    turtle.register_shape('images/tank2.gif')
 
 def setup_welcome(sc, turt):
     '''
@@ -88,13 +92,54 @@ def dismiss_welcome(sc):
     sc.onkey(play_game, 's')
     sc.listen()
 
+def setup_game(sc, pturt, label):
+    '''
+    Sets up the game by changing background and moving turtles.
+
+    Returns None.    
+    '''
+    change_background(sc, 'images/background2-edited-resized-modified.gif')
+    
+    setup_tanks(tank1, True)
+    setup_tanks(tank2, False)
+
+    move_projectile(pturt, True)
+
+    # DRAW LABELS FOR NAME AND AIM
+    label.goto(-GAME_WIDTH/2 + GRID_SIZE * 0.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
+    label.write('power: ', move=False, align='left', font=('Raleway Light', SMALL_FONT, 'normal'))
+    label.goto(-GAME_WIDTH/2 + GRID_SIZE * 0.5, GAME_HEIGHT/2 - GRID_SIZE * 2.5)
+    label.write('angle: ', move=False, align='left', font=('Raleway Light', SMALL_FONT, 'normal'))
+
+    label.goto(-GAME_WIDTH/3, -GAME_HEIGHT/4 + GRID_SIZE/2)
+    label.write('tank 1', move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
+    label.goto(GAME_WIDTH/3, -GAME_HEIGHT/4 + GRID_SIZE/2)
+    label.write('tank 2', move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
+
 def play_game():
     '''
     Plays the game.
 
     Returns None.
     '''
-    pass
+    print('Playing Game...')
+
+    # REMOVING THE BIND TO 's'
+    gameScreen.onkey(None , 's')
+
+    # CLEAR SCREEN FOR GAME
+    gameScreen.clear()
+
+    setup_game(gameScreen, projectile, labelTurtle)
+    tanks_health = [100] * len(tanks)
+
+    currPlayer = 0
+
+    global game_end
+    global winner
+
+    
+
 
 
 ''' HELPER FUNCTIONS '''
@@ -106,6 +151,42 @@ def change_background(sc, background):
     Returns None.
     '''
     sc.bgpic(background)
+
+def setup_tanks(tank, facing_right = True):
+    '''
+    Sets up the position of the given tank.
+
+    Returns None.
+    '''
+    tank.hideturtle()
+    tank.penup()
+
+    if facing_right:
+        tank.goto(-GAME_WIDTH/3, -GAME_HEIGHT/4)
+        tank.shape('images/tank1.gif')
+    else:
+        tank.goto(GAME_WIDTH/3, -GAME_HEIGHT/4)
+        tank.shape('images/tank2.gif')
+
+    tank.showturtle()    
+
+def move_projectile(turt, facing_right = True):
+    '''
+    Sets up the position of the projectile.
+
+    Returns None.
+    '''
+    turt.hideturtle()
+    turt.penup()
+
+    if facing_right:
+        turt.goto(-GAME_WIDTH/3, -GAME_HEIGHT/4)
+        turt.setheading(180)
+    else:
+        turt.goto(GAME_WIDTH/3, -GAME_HEIGHT/4)
+        turt.setheading(0)
+    
+
 
 
 if __name__ == '__main__':
