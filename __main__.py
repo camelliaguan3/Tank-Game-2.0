@@ -12,6 +12,7 @@ End Date: N/A
 import math
 import random
 import time
+from xml.sax.handler import feature_validation
 from consts import *
 import turtle
 
@@ -247,21 +248,46 @@ def hit_tank(x, y, px, py, tank):
 
     Returns True if the target has been hit, False otherwise. [boolean].
     '''
-    left = tank.xcor() - GRID_SIZE / 2
-    right = tank.xcor() + GRID_SIZE / 2
-    top = tank.ycor() + GRID_SIZE / 2
-    bottom = tank.ycor() - GRID_SIZE / 2
+
+    # FINDING THE LONGEST AND SHORTEST DISTANCE IN TANK SQUARE
+    x_coord = tank.xcor()
+    y_coord = tank.ycor()
+
+    x_y_tank = [x_coord, y_coord]
+    
+    l_dist = GRID_SIZE * math.sqrt(2) / 2
+    s_dist = GRID_SIZE / 2
+
+    
+    
+    px_py = [px, py]
+
+    factor = 10
+
+    x *= factor
+    y *= factor
+    px *= factor
+    py *= factor
 
     if x < px:
         for i in range(int(x), int(px) + 1):
-            if i <= right and i >= left:
-                return True
+            for j in range(int(y), int(py) + 1):
+                coords = [i / factor, j / factor]
+                distance = math.dist(x_y_tank, coords)
+                # print('x < px', distance)
+                if distance >= s_dist and distance <= l_dist:
+                    return True
         return False
     else:
         for i in range(int(px), int(x) + 1):
-            if i <= right and i >= left:
-                return True
-        return False
+            for j in range(int(y), int(py) + 1):
+                coords = [i / factor, j / factor]
+                distance = math.dist(x_y_tank, coords)
+                # print('x > px', distance)
+                if distance >= s_dist and distance <= l_dist:
+                    return True
+    
+    return False
 
 def get_aim():
     '''
@@ -280,7 +306,31 @@ def get_aim():
         angle = input('Enter Angle (in degrees): ')
         print('')
     
+    if int(power) > 100 or int(power) < 0: 
+        print('Please enter power between 0 and 100.')
+        power, angle = get_aim()
+
+    elif int(angle) > 90 or int(angle) < 0:
+        print('Please enter angle between 0 and 90.')
+        power, angle = get_aim()
+        
+
     return (power, angle)
+
+def create_parabola(angle, power, t, tank, facing_right):
+    '''
+    Gives coordinates to create a parabola based on given arguments.
+
+    Returns x and y, the coordinates for the projectile [tuple].
+    '''
+    
+    if facing_right:
+        x = power * math.cos(math.radians(angle)) * t + tank.xcor()
+    else:
+        x = (power * math.cos(math.radians(angle)) * t) * -1 + tank.xcor()
+    y = power * math.sin(math.radians(angle)) * t - (((t ** 2) * 9.81) / 2) + tank.ycor()
+
+    return x, y
 
 def shoot_projectile(turt, tank, target, facing_right = True):
     '''
@@ -290,33 +340,42 @@ def shoot_projectile(turt, tank, target, facing_right = True):
     '''
     power, angle = get_aim()
     
-    prev_x = 0
-    prev_y = 0
+    x = 0
+    y = 0
 
     angle = int(angle)
     power = int(power)
-
+    
     for t in range(1, 30):
-
-        # PROJECTILE DIRECTION (BASED ON KINEMATICS)
-        if facing_right:
-            x = power * math.cos(math.radians(angle)) * t + tank.xcor()
-            y = power * math.sin(math.radians(angle)) * t - (((t ** 2) * 9.81) / 2) + tank.ycor()
-        
-        else:
-            x = (power * math.cos(math.radians(angle)) * t) * -1 + tank.xcor()
-            y = power * math.sin(math.radians(angle)) * t - (((t ** 2) * 9.81) / 2) + tank.ycor()
-        
-        turt.goto(x, y)
-        turt.stamp()
 
         prev_x = x
         prev_y = y
 
+        # PROJECTILE DIRECTION (BASED ON KINEMATICS)
+
+        x, y = create_parabola(angle, power, t, tank, facing_right)
+
+        turt.goto(x, y)
+        turt.stamp()
+
         # STOP PROJECTILE WHEN TARGET IS REACHED
         if y <= target.ycor() + GRID_SIZE/2:
+            if facing_right:
+                next_x = power * math.cos(math.radians(angle)) * (t + 1) + tank.xcor()
+
+            else:
+                next_x = (power * math.cos(math.radians(angle)) * (t + 1)) * -1 + tank.xcor() 
+                
+            next_y = power * math.sin(math.radians(angle)) * (t + 1) - ((((t + 1) ** 2) * 9.81) / 2) + tank.ycor()
+
+            turt.goto(next_x, next_y)
+            turt.stamp()
+
             break
+
     
+    print('x', x)
+    print('prev_x', prev_x)
     hit = hit_tank(x, y, prev_x, prev_y, target)
 
     return (hit, power, angle)
