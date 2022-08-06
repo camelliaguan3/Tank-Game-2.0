@@ -10,6 +10,7 @@ End Date: N/A
 '''
 
 import math
+import random
 import time
 from consts import *
 import turtle
@@ -174,9 +175,15 @@ def play_game():
 
         # TARGEt HIT, LOWER HEALTH
         if hit:
-            pass
+            tanks_health[currPlayer] -= random.randrange(20, 51)
+            print('tank hit!!')
+            
+            wordTurtle.goto(GAME_WIDTH/2 - GRID_SIZE * 0.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
+            wordTurtle.write('hit!', move=False, align='right', font=('Raleway Light', SMALL_FONT, 'normal'))
         else:
-            pass
+            wordTurtle.goto(GAME_WIDTH/2 - GRID_SIZE * 0.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
+            wordTurtle.write('miss!', move=False, align='right', font=('Raleway Light', SMALL_FONT, 'normal'))
+
 
         if min(tanks_health) <= 0:
             game_end = True
@@ -234,13 +241,27 @@ def move_projectile(turt, facing_right = True):
     
     turt.pendown()
     
-def hit_tank():
+def hit_tank(x, y, px, py, tank):
     '''
     Determines if the target is hit by the projectile.
 
     Returns True if the target has been hit, False otherwise. [boolean].
     '''
-    pass
+    left = tank.xcor() - GRID_SIZE / 2
+    right = tank.xcor() + GRID_SIZE / 2
+    top = tank.ycor() + GRID_SIZE / 2
+    bottom = tank.ycor() - GRID_SIZE / 2
+
+    if x < px:
+        for i in range(int(x), int(px) + 1):
+            if i <= right and i >= left:
+                return True
+        return False
+    else:
+        for i in range(int(px), int(x) + 1):
+            if i <= right and i >= left:
+                return True
+        return False
 
 def get_aim():
     '''
@@ -296,7 +317,7 @@ def shoot_projectile(turt, tank, target, facing_right = True):
         if y <= target.ycor() + GRID_SIZE/2:
             break
     
-    hit = hit_tank()
+    hit = hit_tank(x, y, prev_x, prev_y, target)
 
     return (hit, power, angle)
 
