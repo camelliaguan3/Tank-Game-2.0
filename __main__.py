@@ -162,7 +162,7 @@ def play_game():
 
         wordTurtle.write('⇩', move=False, align='center', font=('Raleway Light', SMALL_FONT, 'normal'))
 
-        time.sleep(3)
+        time.sleep(2)
         projectile.clear()
 
         move_projectile(projectile, facing_right)
@@ -176,8 +176,8 @@ def play_game():
 
         # TARGEt HIT, LOWER HEALTH
         if hit:
-            tanks_health[currPlayer] -= random.randrange(20, 51)
-            print('tank hit!!')
+            tanks_health[nextPlayer] -= random.randrange(20, 51)
+            print('Tank hit!!\n')
             
             wordTurtle.goto(GAME_WIDTH/2 - GRID_SIZE * 0.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
             wordTurtle.write('hit!', move=False, align='right', font=('Raleway Light', SMALL_FONT, 'normal'))
@@ -192,8 +192,29 @@ def play_game():
 
         currPlayer = (currPlayer + 1) % 2
 
-        time.sleep(3)
+        time.sleep(2)
         wordTurtle.clear()
+
+    print('Tank ' + str(winner) + ' has won!')
+
+    tanks[0].hideturtle()
+    tanks[1].hideturtle()
+
+    end_game(max(tanks_health))
+
+def end_game(score):
+    change_background(gameScreen, 'images/background1-resized.gif')
+
+    wordTurtle.clear()
+    labelTurtle.clear()
+    projectile.clear()
+
+    wordTurtle.goto(0, -GAME_HEIGHT/10)
+    wordTurtle.write('Tank ' + str(winner) + ' wins!', move=False, align='center', font=('Vonique64', LARGE_FONT, 'normal'))
+    wordTurtle.goto(0, -GAME_HEIGHT/6)
+    wordTurtle.write('with a score of ' + str(score), move=False, align='center', font=('Vonique64', MEDIUM_FONT, 'normal'))
+
+
 
 
 ''' HELPER FUNCTIONS '''
@@ -242,7 +263,7 @@ def move_projectile(turt, facing_right = True):
     
     turt.pendown()
     
-def hit_tank(x, y, px, py, tank):
+def hit_tank(nx, ny, x, y, px, py, tank):
     '''
     Determines if the target is hit by the projectile.
 
@@ -258,12 +279,10 @@ def hit_tank(x, y, px, py, tank):
     l_dist = GRID_SIZE * math.sqrt(2) / 2
     s_dist = GRID_SIZE / 2
 
-    
-    
-    px_py = [px, py]
-
     factor = 10
 
+    nx *= factor
+    ny *= factor
     x *= factor
     y *= factor
     px *= factor
@@ -277,7 +296,14 @@ def hit_tank(x, y, px, py, tank):
                 # print('x < px', distance)
                 if distance >= s_dist and distance <= l_dist:
                     return True
-        return False
+
+        for i in range(int(nx), int(x) + 1):
+            for j in range(int(y), int(py) + 1):
+                coords = [i / factor, j / factor]
+                distance = math.dist(x_y_tank, coords)
+                # print('x < px', distance)
+                if distance >= s_dist and distance <= l_dist:
+                    return True
     else:
         for i in range(int(px), int(x) + 1):
             for j in range(int(y), int(py) + 1):
@@ -287,6 +313,14 @@ def hit_tank(x, y, px, py, tank):
                 if distance >= s_dist and distance <= l_dist:
                     return True
     
+        for i in range(int(x), int(nx) + 1):
+            for j in range(int(y), int(py) + 1):
+                coords = [i / factor, j / factor]
+                distance = math.dist(x_y_tank, coords)
+                # print('x < px', distance)
+                if distance >= s_dist and distance <= l_dist:
+                    return True
+
     return False
 
 def get_aim():
@@ -373,10 +407,7 @@ def shoot_projectile(turt, tank, target, facing_right = True):
 
             break
 
-    
-    print('x', x)
-    print('prev_x', prev_x)
-    hit = hit_tank(x, y, prev_x, prev_y, target)
+    hit = hit_tank(next_x, next_y, x, y, prev_x, prev_y, target)
 
     return (hit, power, angle)
 
