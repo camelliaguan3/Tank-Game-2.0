@@ -39,7 +39,7 @@ The *Milestones* section outlines each milestone and their due dates.
 
 **Milestone 2**
 
-*Due: ~~August 05, 2022~~* August 07, 2022
+*Due: ~~August 05, 2022~~ August 07, 2022*
 
 > &check; Complete projectile code
 
@@ -47,7 +47,7 @@ The *Milestones* section outlines each milestone and their due dates.
 
 **Milestone 3**
 
-*Due: August 12, 2022*
+*Due: ~~August 12, 2022~~ August 14, 2022*
 
 > &cross; Clean up code
 
@@ -70,6 +70,8 @@ The *Design Choices* section explains any choices that I may have made in changi
 **Milestone 1**: I decided to have the turtles and screen as global variables to avoid situations where the screen and turtles cannot be accessed by functions. This was used with the dismissal of the welcome screen, as the `onkey()` method only calls a function that does not have parameters. Therefore, the `play_game()` function is unable to be called with the screen and turtle arguments and is required to reference the global variables. I will attempt to find a way that allows `play_game()` to have parameters.
 
 **Milestone 2**: Unfortunately, I did not get time to work on this milestone before the due date, so I've pushed the date back. The hitting tank algorithm appears to not be working, so I created a new one that takes into account distance from the center of the tank. It seems to work currently.
+
+**Milestone 3**: Like for Milestone 2, I did not get time to work on this milestone before the due date, so I've pushed the date back. 
 
 <hr />
 
