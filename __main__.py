@@ -411,6 +411,17 @@ def shoot_projectile(turt, tank, target, facing_right = True):
 
     return (hit, power, angle)
 
+def add_wind(turt):
+    '''
+    Randomly generates wind that affects the aim of the projectile.
+
+    Returns wind value and direction [tuple].
+    '''
+    wind = random.randint(5, 15)
+    direction = 'right' if random.randint(0, 1) else 'left' # 'right' if 1 and 'left' if 0
+
+    return (wind, direction)
+
 
 if __name__ == '__main__':
     setup_screen_turt(gameScreen, turtles)
