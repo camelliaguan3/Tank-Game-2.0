@@ -51,9 +51,9 @@ The *Milestones* section outlines each milestone and their due dates.
 
 > &cross; Clean up code
 
-> &cross; Test game and fix/refine any smaller issues
+> &check; Test game and fix/refine any smaller issues
 
-> &cross; Add extra features if possible (i.e. animation, wind)
+> &check; Add extra features if possible (i.e. animation, wind)
 
 **Milestone 4**
 

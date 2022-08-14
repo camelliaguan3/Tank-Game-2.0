@@ -167,10 +167,15 @@ def play_game():
 
         move_projectile(projectile, facing_right)
 
-        hit, power, angle = shoot_projectile(projectile, tanks[currPlayer], tanks[nextPlayer], facing_right)
+        wind, direction = add_wind(facing_right)
+        wordTurtle.goto(GAME_WIDTH/2 - GRID_SIZE * 0.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
+        wordTurtle.write(str(abs(wind)) + ' mph ' + direction, move=False, align='right', font=('Raleway Light', SMALL_FONT, 'normal'))
+
+
+        hit, power, angle = shoot_projectile(projectile, tanks[currPlayer], tanks[nextPlayer], wind, facing_right)
 
         wordTurtle.goto(-GAME_WIDTH/2 + GRID_SIZE * 3.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
-        wordTurtle.write(power, move=False, align='left', font=('Raleway Light', SMALL_FONT, 'normal'))
+        wordTurtle.write(power - wind, move=False, align='left', font=('Raleway Light', SMALL_FONT, 'normal'))
         wordTurtle.goto(-GAME_WIDTH/2 + GRID_SIZE * 3.5, GAME_HEIGHT/2 - GRID_SIZE * 2.5)
         wordTurtle.write(angle, move=False, align='left', font=('Raleway Light', SMALL_FONT, 'normal'))
 
@@ -179,11 +184,11 @@ def play_game():
             tanks_health[nextPlayer] -= random.randrange(20, 51)
             print('Tank hit!!\n')
             
-            wordTurtle.goto(GAME_WIDTH/2 - GRID_SIZE * 0.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
-            wordTurtle.write('hit!', move=False, align='right', font=('Raleway Light', SMALL_FONT, 'normal'))
+            wordTurtle.goto(0, GAME_HEIGHT/3 - GRID_SIZE * 1.5)
+            wordTurtle.write('hit!', move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
         else:
-            wordTurtle.goto(GAME_WIDTH/2 - GRID_SIZE * 0.5, GAME_HEIGHT/2 - GRID_SIZE * 1.5)
-            wordTurtle.write('miss!', move=False, align='right', font=('Raleway Light', SMALL_FONT, 'normal'))
+            wordTurtle.goto(0, GAME_HEIGHT/3 - GRID_SIZE * 1.5)
+            wordTurtle.write('miss!', move=False, align='center', font=('Raleway Light', MINI_FONT, 'normal'))
 
 
         if min(tanks_health) <= 0:
@@ -334,7 +339,7 @@ def get_aim():
     angle = input('Enter Angle (in degrees): ')
     print('')
 
-    while not angle.isnumeric() and not power.isnumeric():
+    while not angle.isnumeric() or not power.isnumeric():
         print('Please enter integers!\n')
         power = input('Enter Power (0 - 100): ')
         angle = input('Enter Angle (in degrees): ')
@@ -366,7 +371,7 @@ def create_parabola(angle, power, t, tank, facing_right):
 
     return x, y
 
-def shoot_projectile(turt, tank, target, facing_right = True):
+def shoot_projectile(turt, tank, target, wind, facing_right = True):
     '''
     Shoots a projectile in a parabolic shape based on power and angle.
 
@@ -378,7 +383,7 @@ def shoot_projectile(turt, tank, target, facing_right = True):
     y = 0
 
     angle = int(angle)
-    power = int(power)
+    power = int(power) + wind
     
     for t in range(1, 30):
 
@@ -411,14 +416,24 @@ def shoot_projectile(turt, tank, target, facing_right = True):
 
     return (hit, power, angle)
 
-def add_wind(turt):
+def add_wind(facing_right = True):
     '''
     Randomly generates wind that affects the aim of the projectile.
 
     Returns wind value and direction [tuple].
     '''
-    wind = random.randint(5, 15)
+    wind = random.randint(6, 15)
     direction = 'right' if random.randint(0, 1) else 'left' # 'right' if 1 and 'left' if 0
+
+    # DETERMINE WHETHER WIND WORKS WITH PROJECTILE
+    if facing_right:
+        if direction == 'left':
+            wind = -wind
+    else:
+        if direction == 'right':
+            wind = -wind
+    
+    direction = 'right ⇒' if direction == 'right' else 'left ⇐'
 
     return (wind, direction)
 
