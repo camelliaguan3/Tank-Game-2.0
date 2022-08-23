@@ -49,7 +49,7 @@ The *Milestones* section outlines each milestone and their due dates.
 
 *Due: ~~August 12, 2022~~ August 14, 2022*
 
-> &cross; Clean up code
+> &check; Clean up code
 
 > &check; Test game and fix/refine any smaller issues
 
@@ -59,7 +59,7 @@ The *Milestones* section outlines each milestone and their due dates.
 
 *Due: August 19, 2022*
 
-> &cross; Complete game :D
+> &check; Complete game :D
 
 <hr />
 
@@ -72,6 +72,8 @@ The *Design Choices* section explains any choices that I may have made in changi
 **Milestone 2**: Unfortunately, I did not get time to work on this milestone before the due date, so I've pushed the date back. The hitting tank algorithm appears to not be working, so I created a new one that takes into account distance from the center of the tank. It seems to work currently.
 
 **Milestone 3**: Like for Milestone 2, I did not get time to work on this milestone before the due date, so I've pushed the date back. 
+
+**Milestone 4**: Tank Game 2.0's updates will be recorded accordingly.
 
 <hr />
 
